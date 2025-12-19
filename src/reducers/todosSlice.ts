@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import type { PayloadAction } from '@reduxjs/toolkit'
 import { AddNewImage, AddNewTodo, Checked, DeleteImage, DeleteTodo, EditTodo, GetData, GetTodoById, SearchTodo } from './api'
 import { Bounce, toast } from 'react-toastify'
 
@@ -7,7 +6,7 @@ export interface todosState {
   isLoading: boolean,
   error: null | string,
   todos: ITodo[],
-  todoById: ITodo | object
+  todoById: any
 }
 
 export interface ITodo {
@@ -44,7 +43,8 @@ export const todosSlice = createSlice({
       state.isLoading = false
       state.todos = payload.data
     }),
-    builder.addCase(DeleteTodo.fulfilled, (state, { payload }) => {
+    builder.addCase(DeleteTodo.fulfilled, (state) => {
+      state.error = null
       toast.success('Successfuly deleted!', {
         position: "top-right",
         autoClose: 3000,
@@ -58,6 +58,7 @@ export const todosSlice = createSlice({
       });
     })
     builder.addCase(DeleteTodo.rejected, (state, { payload }) => {
+      state.error = null
       toast.error(payload+"", {
         position: "top-right",
         autoClose: 3000,
@@ -71,6 +72,7 @@ export const todosSlice = createSlice({
       })
     }),
     builder.addCase(Checked.fulfilled, (state) => {
+      state.error = null
       toast.success("Succesfuly changed!", {
         position: "top-right",
         autoClose: 3000,
@@ -84,6 +86,7 @@ export const todosSlice = createSlice({
       })
     }),
     builder.addCase(Checked.rejected, (state, { payload }) => {
+      state.error = null
       toast.error(payload+"", {
         position: "top-right",
         autoClose: 3000,
@@ -97,6 +100,7 @@ export const todosSlice = createSlice({
       })
     }),
     builder.addCase(AddNewTodo.fulfilled, (state) => {
+      state.error = null
       toast.success("Succesfuly Added!", {
         position: "top-right",
         autoClose: 3000,
@@ -110,6 +114,7 @@ export const todosSlice = createSlice({
       })
     }),
     builder.addCase(AddNewTodo.rejected, (state, { payload }) => {
+      state.error = null
       toast.error(payload+"", {
         position: "top-right",
         autoClose: 3000,
@@ -123,6 +128,7 @@ export const todosSlice = createSlice({
       })
     })
     builder.addCase(EditTodo.fulfilled, (state) => {
+      state.error = null
       toast.success("Succesfuly Edited!", {
         position: "top-right",
         autoClose: 3000,
@@ -136,6 +142,7 @@ export const todosSlice = createSlice({
       })
     }),
     builder.addCase(EditTodo.rejected, (state, { payload }) => {
+      state.error = null
       toast.error(payload+"", {
         position: "top-right",
         autoClose: 3000,
@@ -152,6 +159,7 @@ export const todosSlice = createSlice({
       state.todoById = payload
     })
     builder.addCase(GetTodoById.rejected, (state, { payload }) => {
+      state.error = null
       toast.error(payload+"", {
         position: "top-right",
         autoClose: 3000,
@@ -164,7 +172,7 @@ export const todosSlice = createSlice({
         transition: Bounce,
       })
     }),
-      builder.addCase(DeleteImage.fulfilled, (state) => {
+      builder.addCase(DeleteImage.fulfilled, () => {
         toast.success("Successfuly Deleted!", {
         position: "top-right",
         autoClose: 3000,
@@ -178,6 +186,7 @@ export const todosSlice = createSlice({
       })
       })
       builder.addCase(DeleteImage.rejected, (state, { payload }) => {
+        state.error = null
         toast.error(payload + "", {
         position: "top-right",
         autoClose: 3000,
@@ -190,7 +199,7 @@ export const todosSlice = createSlice({
         transition: Bounce,
       })
       }),
-      builder.addCase(AddNewImage.fulfilled, (state) => {
+      builder.addCase(AddNewImage.fulfilled, () => {
         toast.success("Successfuly Added!", {
         position: "top-right",
         autoClose: 3000,
@@ -204,6 +213,7 @@ export const todosSlice = createSlice({
       })
       })
       builder.addCase(AddNewImage.rejected, (state, { payload }) => {
+        state.error = null
         toast.error(payload + "", {
         position: "top-right",
         autoClose: 3000,

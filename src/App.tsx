@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Button from '@mui/material/Button'
 import { DataGrid } from '@mui/x-data-grid';
 import { useDispatch, useSelector } from 'react-redux';
@@ -87,12 +87,13 @@ const App = () => {
   const { resetForm, setFieldValue, handleSubmit, handleChange, values, errors, touched } = useFormik({
     initialValues: {
       name: "",
-      description: ""
+      description: "",
+      images: []
     },
     validationSchema: formSchema,
     onSubmit: (values) => {
       if (idx != 0) {
-        dispatch(EditTodo({...values, id: idx}))
+        dispatch(EditTodo({name: values.name, description: values.description, id: idx}))
         handleCloseEdit()
         setIdx(0)
         resetForm()
@@ -125,7 +126,7 @@ const App = () => {
     }
   })
 
-  function handleImage (e) {
+  function handleImage (e: any) {
     let images = e.target.files
 
     setFieldValue("images", images)
@@ -133,7 +134,7 @@ const App = () => {
 
   
 
-  const colums = [
+  const colums: any = [
     {
       field: 'name',
       headerName: 'Todo Name',
@@ -147,14 +148,14 @@ const App = () => {
     {
       headerName: 'Todo status',
       width: 300,
-      renderCell: (params) => {
+      renderCell: (params: any) => {
         return <p className={params.row.isCompleted ? "bg-[#00ff002e] text-[lime] p-[1px_25px] w-fit rounded-xl font-semibold m-[0.5vh_0] h-[6vh] items-center" : "bg-[#ff000026] text-[red] p-[1px_25px] w-fit rounded-xl font-semibold m-[0.5vh_0] h-[6vh] items-center"}>{params.row.isCompleted ? "Active" : "Inactive"}</p>
       } 
     }, {
       field: 'actions',
       headerName: 'Actions',
       width: 200 ,
-      renderCell:(params)=>{
+      renderCell:(params: any)=>{
         return <div className='flex items-center m-[2vh_0] gap-[30px]'>
           <Trash onClick={() => dispatch(DeleteTodo(params.row.id))} />
           <Pen onClick={() => {
@@ -173,9 +174,9 @@ const App = () => {
     },
   ]
   const { todos, isLoading, todoById } = useSelector((state: RootState) => state.todos)
-  const dispatch = useDispatch()
+  const dispatch  = useDispatch() as any
 
-  function searchTod (e) {
+  function searchTod (e: any) {
     const value = e.target.value
 
     setSearch(value)
@@ -184,11 +185,12 @@ const App = () => {
 
   const [status, setStatus] = useState("all")
 
-  function selectStatus (e) {
+  function selectStatus (e: any) {
     const stat = e.target.value
     setStatus(stat)
     console.log(status)
   }
+  
 
   useEffect(() => {
     dispatch(GetData())
@@ -207,7 +209,7 @@ const App = () => {
             will send updates occasionally.
           </DialogContentText>
           <form onSubmit={handleSubmit} id="subscription-form">
-            <input className='border-b-1 border-b-[#949494] pt-[2vh] w-full pb-[1vh]' onChange={handleImage} type='file' multiple />
+            <input className='border-b border-b-[#949494] pt-[2vh] w-full pb-[1vh]' onChange={handleImage} type='file' multiple />
             <TextField
               name='name'
               value={values.name}
@@ -250,7 +252,7 @@ const App = () => {
             will send updates occasionally.
           </DialogContentText>
           <form onSubmit={handleSubmit} id="subscription-form">
-            <input className='border-b-1 border-b-[#949494] pt-[2vh] w-full pb-[1vh]' onChange={handleImage} type='file' multiple />
+            <input className='border-b border-b-[#949494] pt-[2vh] w-full pb-[1vh]' onChange={handleImage} type='file' multiple />
           </form>
         </DialogContent>
         <DialogActions>
@@ -327,7 +329,7 @@ const App = () => {
             }}>Add New Img</Button>
           </div>
           <h1 className='text-2xl mt-[2vh] font-bold'>Name: {todoById?.name}</h1>
-          <h1 className='text-2xl mt-[2vh] font-bold flex gap-[20px] items-center'>Status: <span className={todoById?.isCompleted ? "bg-[#00ff002e] text-[lime] p-[5px_35px] w-fit rounded-xl font-semibold items-center" : "bg-[#ff000026] text-[red] p-[5px_35px] w-fit rounded-xl font-semibold items-center"}>{todoById?.isCompleted ? "Active" : "Inactive"}</span></h1>
+          <h1 className='text-2xl mt-[2vh] font-bold flex gap-[0_20px] items-center'>Status: <span className={todoById?.isCompleted ? "bg-[#00ff002e] text-[lime] p-[5px_35px] w-fit rounded-xl font-semibold items-center" : "bg-[#ff000026] text-[red] p-[5px_35px] w-fit rounded-xl font-semibold items-center"}>{todoById?.isCompleted ? "Active" : "Inactive"}</span></h1>
           <p className='mt-[2vh] font-semibold text-2xl'>Description:</p>
           <p className='w-[90%]'>{todoById?.description}</p>
         </DialogContent>
@@ -336,7 +338,7 @@ const App = () => {
         </DialogActions>
       </Dialog>
 
-      <div className='flex gap-[20px] items-center'>
+      <div className='flex gap-[0_20px] items-center'>
         <Button onClick={handleClickOpen}>+ Add</Button>
         <TextField value={Search} onChange={searchTod} placeholder='Search Todo By Name' type='search' />
         <Select
